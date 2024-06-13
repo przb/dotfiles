@@ -1,60 +1,60 @@
 local M = {}
-local fn = vim.fn
-
-M.echo = function(str)
-  vim.cmd "redraw"
-  vim.api.nvim_echo({ { str, "Bold" } }, true, {})
-end
-
-local function shell_call(args)
-  local output = fn.system(args)
-  assert(vim.v.shell_error == 0, "External call failed with error code: " .. vim.v.shell_error .. "\n" .. output)
-end
 
 M.lazy = function(install_path)
-  ------------- base46 ---------------
-  local lazy_path = fn.stdpath "data" .. "/lazy/base46"
+  print "Bootstrapping lazy.nvim .."
 
-  M.echo "  Compiling base46 theme to bytecode ..."
-
-  local base46_repo = "https://github.com/NvChad/base46"
-  shell_call { "git", "clone", "--depth", "1", "-b", "v2.0", base46_repo, lazy_path }
-  vim.opt.rtp:prepend(lazy_path)
-
-  require("base46").compile()
-
-  --------- lazy.nvim ---------------
-  M.echo "  Installing lazy.nvim & plugins ..."
   local repo = "https://github.com/folke/lazy.nvim.git"
-  shell_call { "git", "clone", "--filter=blob:none", "--branch=stable", repo, install_path }
+  vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", repo, install_path }
+
   vim.opt.rtp:prepend(install_path)
 
-  -- install plugins
+  -- install plugins + compile their configs
   require "plugins"
+  vim.api.nvim_buf_delete(0, { force = true }) -- close lazy window
 
-  -- mason packages & show post_bootstrap screen
-  require "nvchad.post_install"()
+  -- install mason packages
+  vim.schedule(function()
+    vim.cmd "MasonInstallAll"
+    local packages = table.concat(vim.g.mason_binaries_list, " ")
+
+    require("mason-registry"):on("package:install:success", function(pkg)
+      packages = string.gsub(packages, pkg.name:gsub("%-", "%%-"), "") -- rm package name
+
+      if packages:match "%S" == nil then
+        vim.schedule(function()
+          vim.api.nvim_buf_delete(0, { force = true })
+          vim.notify "Now please read the docs at nvchad.com!" -- WIP, show a nice screen after it
+        end)
+      end
+    end)
+  end)
 end
 
 M.gen_chadrc_template = function()
-  local path = fn.stdpath "config" .. "/lua/custom"
+  if not vim.api.nvim_get_runtime_file("lua/custom/chadrc.lua", false)[1] then
+    local input = vim.fn.input "Do you want to install chadrc template? (y/n) : "
+    vim.cmd "redraw|echo ''"
 
-  if fn.isdirectory(path) ~= 1 then
-    local input = vim.env.NVCHAD_EXAMPLE_CONFIG or fn.input "Do you want to install example custom config? (y/N): "
+    if input == "y" then
+      print "cloning chadrc starter template repo...."
 
-    if input:lower() == "y" then
-      M.echo "Cloning example custom config repo..."
-      shell_call { "git", "clone", "--depth", "1", "https://github.com/NvChad/example_config", path }
-      fn.delete(path .. "/.git", "rf")
+      local repo = "https://github.com/NvChad/example_config"
+      local install_path = vim.fn.stdpath "config" .. "/lua/custom"
+      vim.fn.system { "git", "clone", "--depth", "1", repo, install_path }
+
+      vim.cmd "redraw|echo ''"
+
+      -- delete .git from that repo
+      vim.loop.fs_rmdir(vim.fn.stdpath "config" .. "/lua/custom/.git")
+      vim.notify "successfully installed chadrc template!"
+      vim.cmd "redraw|echo ''"
     else
-      -- use very minimal chadrc
-      fn.mkdir(path, "p")
+      local custom_dir = vim.fn.stdpath "config" .. "/lua/custom/"
+      vim.fn.mkdir(custom_dir, "p")
 
-      local file = io.open(path .. "/chadrc.lua", "w")
-      if file then
-        file:write "---@type ChadrcConfig\nlocal M = {}\n\nM.ui = { theme = 'onedark' }\n\nreturn M"
-        file:close()
-      end
+      local file = io.open(custom_dir .. "chadrc.lua", "w")
+      file:write "local M = {} \n M.ui = { theme = 'onedark' } \n return M"
+      file:close()
     end
   end
 end
