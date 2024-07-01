@@ -14,10 +14,10 @@ o.smartindent = true
 o.wrap = false
 
 -- undo tree settings
--- o.swapfile = false
--- o.backup = false
--- o.undodir = os.getenv("HOME") .. "/.vim/undodir"
--- o.undofile = true
+o.swapfile = false
+o.backup = false
+o.undodir = os.getenv("HOME") .. "/.vim/undodir"
+o.undofile = true
 
 o.hlsearch = false
 o.incsearch =  true
