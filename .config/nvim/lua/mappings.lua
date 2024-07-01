@@ -7,3 +7,6 @@ map("n", "<leader>rn", "<cmd>set rnu!<CR><cmd>set nu!<CR>", { desc = "toggle rel
 map("n", "K", vim.lsp.buf.hover, {})
 map("n", "gd", vim.lsp.buf.definition, {})
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
+
+-- formatter
+map({ "n", "v" }, "<leader>fm", vim.lsp.buf.format, {})
