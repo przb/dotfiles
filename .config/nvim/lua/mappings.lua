@@ -1,12 +1,11 @@
+require "nvchad.mappings"
+
+-- add yours here
+
 local map = vim.keymap.set
 
-map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "toggle line number" })
-map("n", "<leader>rn", "<cmd>set rnu!<CR><cmd>set nu!<CR>", { desc = "toggle relative number" })
+map("n", ";", ":", { desc = "CMD enter command mode" })
+map("i", "jk", "<ESC>")
+map("i", "jj", "<ESC>")
 
--- lsp settings
-map("n", "K", vim.lsp.buf.hover, {})
-map("n", "gd", vim.lsp.buf.definition, {})
-map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
-
--- formatter
-map({ "n", "v" }, "<leader>fm", vim.lsp.buf.format, {})
+-- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
