@@ -11,3 +11,9 @@ style = 'bold red'
 [nodejs]
 format = 'via [🤖 $version](bold green) '
 
+[hostname]
+ssh_symbol = '🌏 '
+ssh_only = true
+format = '[$ssh_symbol](bold blue) on [$hostname](bold red) '
+trim_at = '.companyname.com'
+disabled = false
