@@ -14,7 +14,7 @@ alias gc "git commit"
 alias gpl "git pull"
 alias gplf "git pull -f"
 alias gpsh "git push"
-alias gpshf "git push --force"
+alias gpshf "git push --force-with-lease"
 function gcm 
         git commit -m "$argv"
 end
