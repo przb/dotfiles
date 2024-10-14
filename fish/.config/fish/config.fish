@@ -1,6 +1,11 @@
 source ~/.config/fish/alias.fish
 source ~/.config/fish/functions/misc.fish
 
+function fish_greeting
+    echo (set_color cyan)$USER(set_color normal) "@" (set_color green)$hostname(set_color normal) on (set_color yellow; date +%D;set_color normal)
+
+end
+
 # Configure Jump
 status --is-interactive; and source (jump shell fish | psub)
 
@@ -29,6 +34,9 @@ set -g fish_color_search_match 'bryellow'  '--background=brblack'
 set -g fish_color_selection 'white'  '--bold'  '--background=brblack'
 set -g fish_color_user brgreen
 set -g fish_color_valid_path --underline
+
+# empty fish greeting
+#set -g fish_greeting
 
 
 set -x LD_LIBRARY_PATH /usr/local/lib
