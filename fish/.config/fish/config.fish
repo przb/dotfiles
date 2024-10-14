@@ -1,4 +1,5 @@
 source ~/.config/fish/alias.fish
+source ~/.config/fish/functions/misc.fish
 
 # Configure Jump
 status --is-interactive; and source (jump shell fish | psub)
