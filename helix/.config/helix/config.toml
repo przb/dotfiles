@@ -1,0 +1,4 @@
+"theme" = "github_dark_dimmed"
+
+[keys.insert]
+j = { j = "normal_mode" }
