@@ -1,12 +1,33 @@
-"theme" = "github_dark_dimmed"
+# "theme" = "amberwood"
+theme = "github_dark_dimmed"
 
 [editor]
 true-color = true
 line-number = "relative"
+color-modes = true
+rainbow-brackets = true
+cursorline = true # highlight the line the cursor is on
+bufferline = "multiple" # show the list of buffers if there are multiple buffers open
+
+[editor.inline-diagnostics]
+cursor-line = "error"
+other-lines = "disable"
+
+[editor.file-picker]
+hidden = false # show hidden files in the file picker
+
+[editor.lsp]
+display-progress-messages = true
+
+[editor.indent-guides]
+render = true
+skip-levels = 1
+character = "|"
 
 [keys.insert]
-j = { j = "normal_mode" }
+j = { j = "normal_mode" } # "jj" in insert mode exits
 
 [keys.normal]
 C-space = ":toggle whitespace.render all none" # Ctrl-space to toggle whitespace display
 S-t = ":toggle lsp.display-inlay-hints" # Shift-t to toggle type hints
+S-l = ":lsp-restart" # Shift-l to restart the lsp server
